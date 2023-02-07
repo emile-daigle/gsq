@@ -8,11 +8,11 @@ const Header = () => {
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
-  
+
   return (
     <>
-      <nav className={styles.header}>
-        <div className={styles.container}>
+      <header className={styles.header}>
+        <nav className={styles.container}>
           <Link href="/" className={styles.logo}>
             <img src="/GSQ.png" alt="Logo" width={75} />
           </Link>
@@ -61,8 +61,8 @@ const Header = () => {
               </Link>
             </li>
           </ul>
-        </div>
-      </nav>
+        </nav>
+      </header>
     </>
   );
 };

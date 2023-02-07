@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
-import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
-import styles from "../styles/Home.module.css";
 import HomeCards from "../components/HomeCards";
 import Hero from "../components/Hero";
-
-const inter = Inter({ subsets: ["latin"] });
+import MainLayout from "../components/MainLayout";
 
 export default function Home() {
   return (
@@ -19,4 +14,8 @@ export default function Home() {
       </section>
     </>
   );
+}
+
+Home.getLayout = function getLayout(page: React.ReactElement) {
+  return <MainLayout>{page}</MainLayout>;
 }

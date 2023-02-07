@@ -1,5 +1,5 @@
-import IGarage from "../interfaces/IGarage";
-import { supabase } from "../utils/supabase";
+import IGarage from "../../interfaces/IGarage";
+import { supabase } from "./supabase";
 
 export const getGarages = async () => {
   try {

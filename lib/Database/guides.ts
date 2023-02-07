@@ -1,6 +1,6 @@
-import IGuide from "../interfaces/IGuide";
-import IGuideContent from "../interfaces/IGuideContent";
-import { Database, supabase } from "../utils/supabase";
+import IGuide from "../../interfaces/IGuide";
+import IGuideContent from "../../interfaces/IGuideContent";
+import { Database, supabase } from "./supabase";
 
 export const getGuides = async () => {
   try {

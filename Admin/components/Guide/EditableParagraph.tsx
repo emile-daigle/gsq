@@ -6,21 +6,19 @@ interface Props {
   inline: IInline[];
 }
 
-function renderSwitch(inline: IInline) {
-    if(inline.text) return <span>{inline.text} {" "}</span>
-    if(inline.strong) return <strong>{inline.strong}{" "}</strong>
-    if(inline.link) return <Link href={inline.link.to}>{inline.link.text}{" "}</Link>
-
+function renderSwitch(inline: IInline, id: number) {
+  if (inline.text) return <span key={id}>{inline.text} </span>;
+  if (inline.strong) return <strong key={id}>{inline.strong} </strong>;
+  if (inline.link)
+    return (
+      <Link href={inline.link.to} key={id}>
+        {inline.link.text}{" "}
+      </Link>
+    );
 }
 
 const EditableParagraph = ({ inline }: Props) => {
-  return (
-    <p>
-      {inline.map((section) => (
-        renderSwitch(section)
-      ))}
-    </p>
-  );
+  return <p>{inline.map((section, id) => renderSwitch(section, id))}</p>;
 };
 
 export default EditableParagraph;

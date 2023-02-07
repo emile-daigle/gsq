@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import IGuideContent from "../../interfaces/IGuideContent";
-import { getGuide, getGuides, getGuidesPaths } from "../../lib/guides";
+import { getGuide, getGuides, getGuidesPaths } from "../../lib/Database/guides";
 import Link from "next/link";
 import { GetStaticPaths, GetStaticProps } from "next";
+import withLayout from "../../components/withLayout";
 
 type Props = {
   guide?: IGuideContent;
@@ -57,6 +58,8 @@ const Guide = ({ guide, errors }: Props) => {
 };
 
 export default Guide;
+
+Guide.getLayout = withLayout();
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {

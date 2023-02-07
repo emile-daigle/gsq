@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import IGarage from "../../interfaces/IGarage";
 import GarageCard from "../../components/GarageCard";
 import styles from "../../styles/garage.module.css";
-import { getGarages } from "../../lib/garages";
+import { getGarages } from "../../lib/Database/garages";
+import withLayout from "../../components/withLayout";
 
 const Garages = ({ garages }: { garages: IGarage[] }) => {
   return (
@@ -20,6 +21,8 @@ const Garages = ({ garages }: { garages: IGarage[] }) => {
   );
 };
 export default Garages;
+
+Garages.getLayout = withLayout();
 
 export async function getStaticProps() {
   const garages = await getGarages();

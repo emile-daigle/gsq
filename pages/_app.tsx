@@ -1,20 +1,33 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
-import Header from "../components/Header";
+import {
+  Session,
+  createBrowserSupabaseClient,
+} from "@supabase/auth-helpers-nextjs";
+import { NextPage } from "next";
+import { ReactElement, ReactNode, useState } from "react";
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
 
-export default function App({ Component, pageProps }: AppProps) {
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
-  const isAdmin = router.pathname.startsWith("/admin");
-  const showHeader = !(
-    router.pathname === "/login" ||
-    router.pathname === "/_error" ||
-    router.pathname.startsWith("/admin")
-  );
+  const [supabaseClient] = useState(() => createBrowserSupabaseClient());
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   return (
-    <>
-      {showHeader ? <Header /> : null}
-      <Component {...pageProps} />
-    </>
+    <SessionContextProvider
+      supabaseClient={supabaseClient}
+      initialSession={pageProps.initialSession}
+    >
+      {getLayout(<Component {...pageProps} />)}
+    </SessionContextProvider>
   );
 }

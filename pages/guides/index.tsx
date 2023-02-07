@@ -2,10 +2,11 @@ import { GetStaticProps } from "next";
 import React, { useEffect, useState } from "react";
 import GuideCard from "../../components/GuideCard";
 import SearchBar from "../../components/SearchBar";
+import withLayout from "../../components/withLayout";
 import IGuide from "../../interfaces/IGuide";
-import { getGuides } from "../../lib/guides";
+import { getGuides } from "../../lib/Database/guides";
 import styles from "../../styles/guides.module.css";
-import { supabase } from "../../utils/supabase";
+import { supabase } from "../../lib/Database/supabase";
 
 type Props = {
   guides?: IGuide[];
@@ -37,6 +38,8 @@ const Guides = ({ guides, errors }: Props) => {
 
 export default Guides;
 
+Guides.getLayout = withLayout();
+
 export const getStaticProps: GetStaticProps = async () => {
   try {
     const guides = await getGuides();
@@ -47,7 +50,7 @@ export const getStaticProps: GetStaticProps = async () => {
       revalidate: 300,
     };
   } catch (error) {
-    console.log(error)
+    console.log(error);
     if (typeof error === "string") {
       return { props: { errors: error }, revalidate: 300 };
     }

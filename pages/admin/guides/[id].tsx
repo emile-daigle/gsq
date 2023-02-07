@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react";
-import EditableContainer from "../../Admin/components/Guide/EditableContainer";
-import EditableParagraph from "../../Admin/components/Guide/EditableParagraph";
-import EditableTitle from "../../Admin/components/Guide/EditableTitle";
-import EditPopUp from "../../Admin/components/Guide/PopUp/EditPopUp";
-import Editable from "../../components/Editable";
-import IGuideContent, { IInline } from "../../interfaces/IEditable";
-import IContent, { IParagraph } from "../../interfaces/IEditable";
-import { getGuide } from "../../lib/Database/guides";
-import styles from "../../Admin/styles/admin-guide.module.css";
-import AdminLayout from "../../Admin/components/AdminLayout";
-import { supabase } from "../../lib/Database/supabase";
-import { useUser } from "@supabase/auth-helpers-react";
+import EditableContainer from "../../../Admin/components/Guide/EditableContainer";
+import EditableParagraph from "../../../Admin/components/Guide/EditableParagraph";
+import EditableTitle from "../../../Admin/components/Guide/EditableTitle";
+import EditPopUp from "../../../Admin/components/Guide/PopUp/EditPopUp";
+import Editable from "../../../components/Editable";
+import IGuideContent, { IInline } from "../../../interfaces/IEditable";
+import IContent, { IParagraph } from "../../../interfaces/IEditable";
+import { getGuide } from "../../../lib/Database/guides";
+import styles from "../../../Admin/styles/admin-guide.module.css"
+import AdminLayout from "../../../Admin/components/AdminLayout";
 
-const test = () => {
-  const user = useUser();
+const Guide = () => {
   const [guide, setGuide] = useState<IGuideContent>();
   const [editingID, setEditingID] = useState<number | null>(null);
 
@@ -26,7 +23,6 @@ const test = () => {
   }
   useEffect(() => {
     const fetchGuide = async () => {
-      console.log(user);
       console.log("ALLO");
       let guide = await getGuide("bov");
       console.log(guide);
@@ -147,8 +143,9 @@ const test = () => {
   );
 };
 
-export default test;
+export default Guide;
 
-test.getLayout = function getLayout(page: React.ReactElement) {
+Guide.getLayout = function getLayout(page: React.ReactElement) {
   return <AdminLayout>{page}</AdminLayout>;
-};
+}
+
