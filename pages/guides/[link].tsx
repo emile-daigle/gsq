@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import IGuideContent from "../../interfaces/IGuideContent";
-import { getGuide, getGuides, getGuidesPaths } from "../../lib/Database/guides";
+import { getGuide, getGuidesPaths } from "../../lib/Database/guides";
 import Link from "next/link";
 import { GetStaticPaths, GetStaticProps } from "next";
 import withLayout from "../../components/withLayout";
-import { redirectError } from "../../lib/SSR/redirect";
 
 type Props = {
   guide?: IGuideContent;
@@ -89,7 +88,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
     const link = params?.link;
-    if (!link || typeof link !== "string") throw new Error("Erreur de lien");
+    if (!link || typeof link !== "string") throw new Error("Erreur de lien.");
     const guide = await getGuide(link);
     if (!guide) throw new Error("Pas de guide à ce lien");
     return {
@@ -99,6 +98,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 300,
     };
   } catch (error) {
-    return redirectError(error);
+    let errorMessage = "Error";
+    if (typeof error === "string") {
+      errorMessage = error
+    }
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    return { props: { errors: errorMessage }, revalidate: 300 };
   }
 };
