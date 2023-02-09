@@ -6,7 +6,7 @@ import withLayout from "../../components/withLayout";
 import IGuide from "../../interfaces/IGuide";
 import { getGuides } from "../../lib/Database/guides";
 import styles from "../../styles/guides.module.css";
-import { supabase } from "../../lib/Database/supabase";
+import { redirectError } from "../../lib/SSR/redirect";
 
 type Props = {
   guides?: IGuide[];
@@ -43,6 +43,7 @@ Guides.getLayout = withLayout();
 export const getStaticProps: GetStaticProps = async () => {
   try {
     const guides = await getGuides();
+    if(!guides) throw new Error("Erreur dans la base de données des guides")
     return {
       props: {
         guides,
@@ -50,13 +51,6 @@ export const getStaticProps: GetStaticProps = async () => {
       revalidate: 300,
     };
   } catch (error) {
-    console.log(error);
-    if (typeof error === "string") {
-      return { props: { errors: error }, revalidate: 300 };
-    }
-    if (error instanceof Error) {
-      return { props: { errors: error.message }, revalidate: 300 };
-    }
-    return { props: { errors: "Error" }, revalidate: 300 };
+    return redirectError(error);
   }
 };

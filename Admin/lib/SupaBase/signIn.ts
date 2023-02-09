@@ -1,5 +1,4 @@
 import { SupabaseClient, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { Database } from "../../lib/Database/supabase";
 
 export const signIn = async (email: string, password: string, supabaseClient : SupabaseClient) => {
   const { data, error } = await supabaseClient.auth.signInWithPassword({

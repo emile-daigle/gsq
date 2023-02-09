@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import HomeCards from "../components/HomeCards";
 import Hero from "../components/Hero";
-import MainLayout from "../components/MainLayout";
+import withLayout from "../components/withLayout";
 
 export default function Home() {
   return (
@@ -16,6 +16,4 @@ export default function Home() {
   );
 }
 
-Home.getLayout = function getLayout(page: React.ReactElement) {
-  return <MainLayout>{page}</MainLayout>;
-}
+Home.getLayout = withLayout();

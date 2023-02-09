@@ -1,17 +1,24 @@
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { User, useSupabaseClient } from "@supabase/auth-helpers-react";
+import {
+  SupabaseClient,
+  User,
+  useSupabaseClient,
+  useUser,
+} from "@supabase/auth-helpers-react";
 import { GetServerSidePropsContext } from "next";
 import React from "react";
 import AdminLayout from "../../Admin/components/AdminLayout";
-import { signOut } from "../../Admin/lib/signIn";
+import withAdminLayout from "../../Admin/components/withAdminLayout";
+import { checkServerAuth } from "../../Admin/lib/SupaBase/checkSession";
+import { signOut } from "../../Admin/lib/SupaBase/signIn";
 import { Database } from "../../lib/Database/supabase";
 
 const index = ({ user }: { user: User }) => {
   const supabaseClient = useSupabaseClient<Database>();
-
+  const user2 = useUser();
   return (
     <div>
-      Hello {user.id}{" "}
+      Hello {user.id} {user2?.id}
       <button onClick={() => signOut(supabaseClient)}>LogOut</button>
     </div>
   );
@@ -19,23 +26,19 @@ const index = ({ user }: { user: User }) => {
 
 export default index;
 
-index.getLayout = function getLayout(page: React.ReactElement) {
-  return <AdminLayout>{page}</AdminLayout>;
-};
+index.getLayout = withAdminLayout()
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  // Create authenticated Supabase Client
   const supabase = createServerSupabaseClient(ctx);
-  // Check if we have a session
-  console.log(await supabase.auth.getSession());
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  console.log(session);
+  const lol = ctx.req.cookies['supabase-auth-token']
+  const lol2 = JSON.parse(JSON.stringify(lol));
+  console.log(lol2[0]);
+  console.log(await supabase.auth.getUser(ctx.req.cookies['supabase-auth-token']))
+  const session = await checkServerAuth(supabase);
   if (!session)
     return {
       redirect: {
-        destination: "/",
+        destination: "/login",
         permanent: false,
       },
     };

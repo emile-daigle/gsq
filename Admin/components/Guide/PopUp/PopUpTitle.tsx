@@ -1,5 +1,5 @@
 import React, { useState, KeyboardEvent, FocusEvent } from "react";
-import { IInline, IParagraph } from "../../../interfaces/IEditable";
+import { IInline, IParagraph } from "../../../../interfaces/IEditable";
 import styles from "../../../styles/admin-popup.module.css";
 
 interface Props {

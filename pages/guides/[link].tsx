@@ -5,6 +5,7 @@ import { getGuide, getGuides, getGuidesPaths } from "../../lib/Database/guides";
 import Link from "next/link";
 import { GetStaticPaths, GetStaticProps } from "next";
 import withLayout from "../../components/withLayout";
+import { redirectError } from "../../lib/SSR/redirect";
 
 type Props = {
   guide?: IGuideContent;
@@ -88,7 +89,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
     const link = params?.link;
-    if (!link || typeof link !== "string") throw new Error();
+    if (!link || typeof link !== "string") throw new Error("Erreur de lien");
     const guide = await getGuide(link);
     if (!guide) throw new Error("Pas de guide à ce lien");
     return {
@@ -98,12 +99,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 300,
     };
   } catch (error) {
-    if (typeof error === "string") {
-      return { props: { errors: error }, revalidate: 300 };
-    }
-    if (error instanceof Error) {
-      return { props: { errors: error.message }, revalidate: 300 };
-    }
-    return { props: { errors: "Error" }, revalidate: 300 };
+    return redirectError(error);
   }
 };

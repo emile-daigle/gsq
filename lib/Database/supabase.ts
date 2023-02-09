@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import IGuide from "../../interfaces/IGuide";
 import IGuideContent from "../../interfaces/IGuideContent";
 
 export type Json =

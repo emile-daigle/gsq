@@ -4,6 +4,7 @@ import GarageCard from "../../components/GarageCard";
 import styles from "../../styles/garage.module.css";
 import { getGarages } from "../../lib/Database/garages";
 import withLayout from "../../components/withLayout";
+import { redirectError } from "../../lib/SSR/redirect";
 
 const Garages = ({ garages }: { garages: IGarage[] }) => {
   return (
@@ -24,12 +25,16 @@ export default Garages;
 
 Garages.getLayout = withLayout();
 
-export async function getStaticProps() {
-  const garages = await getGarages();
-  return {
-    props: {
-      garages,
-    },
-    revalidate: 300,
-  };
-}
+export const getStaticProps = async () => {
+  try {
+    const garages = await getGarages();
+    return {
+      props: {
+        garages,
+      },
+      revalidate: 300,
+    };
+  } catch (error) {
+    return redirectError(error);
+  }
+};

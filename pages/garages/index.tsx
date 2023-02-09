@@ -7,6 +7,7 @@ import { redirect } from "next/dist/server/api-utils";
 import MapPlaceHolder from "../../components/MapPlaceHolder";
 import { GetStaticProps } from "next";
 import withLayout from "../../components/withLayout";
+import { redirectError } from "../../lib/SSR/redirect";
 
 const MapL = dynamic(import("../../components/MapL"), {
   ssr: false,
@@ -25,12 +26,16 @@ export default Garages;
 
 Garages.getLayout = withLayout();
 
-export const getStaticProps: GetStaticProps = async () => {
-  const garages = await getGarages();
-  return {
-    props: {
-      garages,
-    },
-    revalidate: 300,
-  };
+export const getStaticProps = async () => {
+  try {
+    const garages = await getGarages();
+    return {
+      props: {
+        garages,
+      },
+      revalidate: 300,
+    };
+  } catch (error) {
+    return redirectError(error);
+  }
 };

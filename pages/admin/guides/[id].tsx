@@ -7,11 +7,21 @@ import Editable from "../../../components/Editable";
 import IGuideContent, { IInline } from "../../../interfaces/IEditable";
 import IContent, { IParagraph } from "../../../interfaces/IEditable";
 import { getGuide } from "../../../lib/Database/guides";
-import styles from "../../../Admin/styles/admin-guide.module.css"
+import styles from "../../../Admin/styles/admin-guide.module.css";
 import AdminLayout from "../../../Admin/components/AdminLayout";
+import withAdminLayout from "../../../Admin/components/withAdminLayout";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { checkServerAuth } from "../../../Admin/lib/SupaBase/checkSession";
+import { GetServerSidePropsContext } from "next";
 
-const Guide = () => {
-  const [guide, setGuide] = useState<IGuideContent>();
+type Props = {
+  guideProp?: IGuideContent;
+  errors?: string;
+};
+
+const Guide = ({ guideProp, errors }: Props) => {
+  if (errors) return <p>Erreurs</p>;
+  const [guide, setGuide] = useState<IGuideContent | undefined>(guideProp);
   const [editingID, setEditingID] = useState<number | null>(null);
 
   function renderSwitch(paragraph: IParagraph) {
@@ -21,15 +31,6 @@ const Guide = () => {
     if (paragraph.image) return <EditableTitle text="image" />;
     //if(paragraph.text) return <Paragraph/>
   }
-  useEffect(() => {
-    const fetchGuide = async () => {
-      console.log("ALLO");
-      let guide = await getGuide("bov");
-      console.log(guide);
-      setGuide(guide);
-    };
-    fetchGuide();
-  }, []);
 
   const handleOpenPopUp = (pid: number) => {
     if (!pid && pid != 0) return;
@@ -145,7 +146,45 @@ const Guide = () => {
 
 export default Guide;
 
-Guide.getLayout = function getLayout(page: React.ReactElement) {
-  return <AdminLayout>{page}</AdminLayout>;
-}
+Guide.getLayout = withAdminLayout();
 
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  try {
+    const { id } = ctx.query;
+    const supabase = createServerSupabaseClient(ctx);
+    const session = await checkServerAuth(supabase);
+    if (!session || !id)
+      return {
+        redirect: {
+          destination: "/login",
+          permanent: false,
+        },
+      };
+
+    const guide = await getGuide(id.toString());
+
+    if (!guide) throw new Error("Pas de guide à ce lien");
+
+    return {
+      props: {
+        guideProp: guide,
+      },
+    };
+  } catch (error) {
+    let errorMessage = "Error";
+    console.log(error);
+
+    if (typeof error === "string") {
+      errorMessage = error;
+    }
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return {
+      redirect: {
+        destination: `/error?error=${errorMessage}`,
+        permanent: false,
+      },
+    };
+  }
+};
