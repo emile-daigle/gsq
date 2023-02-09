@@ -12,7 +12,7 @@ import AdminLayout from "../../Admin/components/AdminLayout";
 import { supabase } from "../../lib/Database/supabase";
 import { useUser } from "@supabase/auth-helpers-react";
 
-const test = () => {
+const Test = () => {
   const user = useUser();
   const [guide, setGuide] = useState<IGuideContent>();
   const [editingID, setEditingID] = useState<number | null>(null);
@@ -147,8 +147,8 @@ const test = () => {
   );
 };
 
-export default test;
+export default Test;
 
-test.getLayout = function getLayout(page: React.ReactElement) {
+Test.getLayout = function getLayout(page: React.ReactElement) {
   return <AdminLayout>{page}</AdminLayout>;
 };
