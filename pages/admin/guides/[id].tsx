@@ -20,10 +20,9 @@ type Props = {
 };
 
 const Guide = ({ guideProp, errors }: Props) => {
-  if (errors) return <p>Erreurs</p>;
   const [guide, setGuide] = useState<IGuideContent | undefined>(guideProp);
   const [editingID, setEditingID] = useState<number | null>(null);
-
+  if (errors) return <p>Erreurs</p>;
   function renderSwitch(paragraph: IParagraph) {
     if (paragraph.title) return <EditableTitle text={paragraph.title} />;
     if (paragraph.inline)

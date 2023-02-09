@@ -4,7 +4,7 @@ import { signIn } from "../Admin/lib/SupaBase/signIn";
 import Link from "next/link";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
-const login = () => {
+const Login = () => {
   const supabaseClient = useSupabaseClient<Database>();
 
   const handleSubmit = async (event: React.MouseEvent) => {
@@ -20,4 +20,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

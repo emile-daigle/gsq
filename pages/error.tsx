@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React from 'react'
 
-const error = () => {
+const Error = () => {
     const router = useRouter();
     const { error } = router.query
   return (
@@ -9,4 +9,4 @@ const error = () => {
   )
 }
 
-export default error
+export default Error

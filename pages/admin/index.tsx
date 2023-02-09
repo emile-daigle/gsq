@@ -13,7 +13,7 @@ import { checkServerAuth } from "../../Admin/lib/SupaBase/checkSession";
 import { signOut } from "../../Admin/lib/SupaBase/signIn";
 import { Database } from "../../lib/Database/supabase";
 
-const index = ({ user }: { user: User }) => {
+const Index = ({ user }: { user: User }) => {
   const supabaseClient = useSupabaseClient<Database>();
   const user2 = useUser();
   return (
@@ -24,9 +24,9 @@ const index = ({ user }: { user: User }) => {
   );
 };
 
-export default index;
+export default Index;
 
-index.getLayout = withAdminLayout()
+Index.getLayout = withAdminLayout()
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const supabase = createServerSupabaseClient(ctx);
